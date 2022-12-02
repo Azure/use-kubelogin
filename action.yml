@@ -1,0 +1,11 @@
+name: Setup kubelogin
+description: Setup kubelogin in GitHub Actions
+inputs:
+  kubelogin-version:
+    description: 'The version of kubelogin to use. Defaults to the latest version.'
+    required: false
+branding:
+  color: green
+runs:
+  using: 'node16'
+  main: 'lib/index.js'
