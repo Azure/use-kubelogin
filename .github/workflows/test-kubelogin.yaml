@@ -1,3 +1,5 @@
+name: Test workflow
+
 on:
   workflow_dispatch:
     inputs:
@@ -15,6 +17,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+    - uses: actions/checkout@v2
+      name: Checkout code
     - uses: ./ # use current branch
       env:
         ACTIONS_STEP_DEBUG: true
