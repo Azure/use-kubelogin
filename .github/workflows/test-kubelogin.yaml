@@ -1,0 +1,22 @@
+on:
+  workflow_dispatch:
+    inputs:
+      kubelogin-version:
+        description: 'kubelogin version to use'
+        required: true
+        default: '*'
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        # TODO(hbc): add windows/mac
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: ./ # use current branch
+      env:
+        ACTIONS_STEP_DEBUG: true
+      with:
+        kubelogin-version: ${{ github.event.inputs.kubelogin-version }}
