@@ -22,6 +22,6 @@ jobs:
     - uses: ./ # use current branch
       env:
         ACTIONS_STEP_DEBUG: true
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         kubelogin-version: ${{ github.event.inputs.kubelogin-version }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
