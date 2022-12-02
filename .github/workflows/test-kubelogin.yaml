@@ -24,3 +24,4 @@ jobs:
         ACTIONS_STEP_DEBUG: true
       with:
         kubelogin-version: ${{ github.event.inputs.kubelogin-version }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
