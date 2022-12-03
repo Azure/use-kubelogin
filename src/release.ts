@@ -1,7 +1,9 @@
 import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
+import * as fs from 'fs';
 import path from 'path';
 import { isLatestVersion, releaseArtifactURL, resolveLatestVersion } from "./gh";
+import { sha256File } from './hash';
 
 const TOOL_NAME = 'kubelogin';
 
@@ -68,8 +70,39 @@ function resolveBinaryPath(artifact: KubeloginArtifact, dir: string): string {
     return path.join(dir, 'bin', normalizedPlatform, "kubelogin.exe");
   } else {
     // ex: bin/linux_amd64/kubelogin
-    const normalizedPlatform = artifact.platform.replace('-', '_');
-    return path.join(dir, 'bin', normalizedPlatform, "kubelogin");
+    const normalizedPlatform = artifact.platform.replace("-", "_");
+    return path.join(dir, "bin", normalizedPlatform, "kubelogin");
+  }
+}
+
+async function verifyZipballChecksum(
+  zipballPath: string,
+  checksumPath: string
+) {
+  const zipballChecksum = await sha256File(zipballPath);
+  const zipballFile = path.basename(zipballPath);
+  core.debug(
+    `calculated sha256 checksum of ${zipballFile}: ${zipballChecksum}`
+  );
+
+  // format:
+  //  {checksum}  {filename}
+  const checksumLines = fs
+    .readFileSync(checksumPath, "utf8")
+    .toString()
+    .split("\n")
+    .map((l) => l.split(/\s+/));
+  const expectedChecksum = checksumLines.find((l) => l[1] === zipballFile);
+  if (!expectedChecksum) {
+    throw new Error(
+      `No checksum found for ${zipballFile} from ${checksumPath}`
+    );
+  }
+
+  if (expectedChecksum[0] !== zipballChecksum) {
+    throw new Error(
+      `Checksum mismatch: expected ${expectedChecksum[0]}, got ${zipballChecksum}`
+    );
   }
 }
 
@@ -83,6 +116,9 @@ async function downloadAndCache(
 
   const artifactChecksum = await tc.downloadTool(artifact.checksumUrl);
   core.debug(`Downloaded ${artifact.checksumUrl} to ${artifactChecksum}`);
+
+  await verifyZipballChecksum(artifactZipball, artifactChecksum);
+  core.debug(`Verified checksum of ${artifactZipball}`);
 
   const artifactFolder = await tc.extractZip(artifactZipball);
   core.debug(`Extracted ${artifactZipball} to ${artifactFolder}`);
