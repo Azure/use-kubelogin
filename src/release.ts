@@ -48,9 +48,11 @@ export async function getReleaseArtifact(
     version = await resolveLatestVersion();
   }
 
+  platform = platform || resolvePlatform();
+
   return {
     version,
-    platform: platform || resolvePlatform(),
+    platform,
     // NOTE: we construct the URL by convention. If the release artifacts change in kubelogin side,
     //       we need to update this function.
     artifactUrl: releaseArtifactURL([version, `kubelogin-${platform}.zip`]),
