@@ -151,8 +151,15 @@ async function downloadAndCache(artifact: KubeloginArtifact): Promise<string> {
 }
 
 // setupArtifact prepares the kubelogin binary and add it to PATH.
-export async function setupArtifact(artifact: KubeloginArtifact) {
-  const cachedDir = tc.find(TOOL_NAME, artifact.version);
+export async function setupArtifact(
+  artifact: KubeloginArtifact,
+  skipCache?: boolean
+) {
+  let cachedDir = '';
+
+  if (!skipCache) {
+    cachedDir = tc.find(TOOL_NAME, artifact.version);
+  }
 
   let binaryPath: string;
 
