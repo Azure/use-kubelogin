@@ -27,5 +27,6 @@ jobs:
       with:
         kubelogin-version: ${{ github.event.inputs.kubelogin-version }}
     - run: |
+        env
         kubelogin --version
       name: Invoke kubelogin
