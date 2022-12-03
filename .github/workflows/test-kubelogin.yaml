@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       name: Checkout code
     - uses: ./ # use current branch
       name: Setup kubelogin
