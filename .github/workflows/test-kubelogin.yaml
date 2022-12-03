@@ -12,16 +12,20 @@ jobs:
   test:
     strategy:
       matrix:
-        # TODO(hbc): add windows/mac
-        os: [ubuntu-latest]
+        # TODO(hbc): add ARM64 runners
+        os: [ubuntu-latest windows-latest macos-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v2
       name: Checkout code
     - uses: ./ # use current branch
+      name: Setup kubelogin
       env:
         ACTIONS_STEP_DEBUG: true
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         kubelogin-version: ${{ github.event.inputs.kubelogin-version }}
+    - run: |
+        kubelogin --version
+      name: Invoke kubelogin
