@@ -67,7 +67,7 @@ function resolveBinaryPath(artifact: KubeloginArtifact, dir: string): string {
   if (artifact.platform === 'win-amd64') {
     normalizedBinaryName += '.exe';
   }
-  return path.join(dir, normalizedPlatform, normalizedBinaryName);
+  return path.join(dir, 'bin', normalizedPlatform, normalizedBinaryName);
 }
 
 // downloadAndCache downloads the artifact and caches it.
