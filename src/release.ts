@@ -106,4 +106,5 @@ export async function setupArtifact(artifact: KubeloginArtifact) {
   }
 
   core.addPath(binaryPath);
+  core.info(`Added ${binaryPath} to PATH`);
 }
