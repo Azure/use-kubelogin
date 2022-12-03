@@ -54,7 +54,7 @@ export async function getReleaseArtifact(
 
   platform = platform || resolvePlatform();
 
-  const artifactName = `kubelogin_${platform}.zip`;
+  const artifactName = `kubelogin-${platform}.zip`;
 
   return {
     version,
