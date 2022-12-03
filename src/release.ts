@@ -34,6 +34,8 @@ export interface KubeloginArtifact {
   readonly version: string;
   // platform is the platform of the artifact.
   readonly platform: Platform;
+  // artifactName is the name of the artifact.
+  readonly artifactName: string;
   // artifactUrl is the URL of the artifact.
   readonly artifactUrl: string;
   // checksumUrl is the SHA256 checksum URL of the artifact.
@@ -52,13 +54,16 @@ export async function getReleaseArtifact(
 
   platform = platform || resolvePlatform();
 
+  const artifactName = `kubelogin_${platform}.zip`;
+
   return {
     version,
     platform,
+    artifactName,
     // NOTE: we construct the URL by convention. If the release artifacts change in kubelogin side,
     //       we need to update this function.
-    artifactUrl: releaseArtifactURL([version, `kubelogin-${platform}.zip`]),
-    checksumUrl: releaseArtifactURL([version, `kubelogin-${platform}.zip.sha256`]),
+    artifactUrl: releaseArtifactURL([version, artifactName]),
+    checksumUrl: releaseArtifactURL([version, `${artifactName}.sha256`]),
   };
 }
 
@@ -77,12 +82,12 @@ function resolveBinaryPath(artifact: KubeloginArtifact, dir: string): string {
 
 async function verifyZipballChecksum(
   zipballPath: string,
+  artifactName: string,
   checksumPath: string
 ) {
   const zipballChecksum = await sha256File(zipballPath);
-  const zipballFile = path.basename(zipballPath);
   core.debug(
-    `calculated sha256 checksum of ${zipballFile}: ${zipballChecksum}`
+    `calculated sha256 checksum of ${artifactName}: ${zipballChecksum}`
   );
 
   // format:
@@ -92,10 +97,10 @@ async function verifyZipballChecksum(
     .toString()
     .split("\n")
     .map((l) => l.split(/\s+/));
-  const expectedChecksum = checksumLines.find((l) => l[1] === zipballFile);
+  const expectedChecksum = checksumLines.find((l) => l[1].trim() === artifactName);
   if (!expectedChecksum) {
     throw new Error(
-      `No checksum found for ${zipballFile} from ${checksumPath}`
+      `No checksum found for ${artifactName} from ${checksumPath}`
     );
   }
 
@@ -117,7 +122,7 @@ async function downloadAndCache(
   const artifactChecksum = await tc.downloadTool(artifact.checksumUrl);
   core.debug(`Downloaded ${artifact.checksumUrl} to ${artifactChecksum}`);
 
-  await verifyZipballChecksum(artifactZipball, artifactChecksum);
+  await verifyZipballChecksum(artifactZipball, artifact.artifactName, artifactChecksum);
   core.debug(`Verified checksum of ${artifactZipball}`);
 
   const artifactFolder = await tc.extractZip(artifactZipball);
