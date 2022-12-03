@@ -61,13 +61,16 @@ export async function getReleaseArtifact(
 }
 
 function resolveBinaryPath(artifact: KubeloginArtifact, dir: string): string {
-  // ex: bin/linux_amd64/kubelogin
-  const normalizedPlatform = artifact.platform.replace('-', '_');
-  let normalizedBinaryName = 'kubelogin';
-  if (artifact.platform === 'win-amd64') {
-    normalizedBinaryName += '.exe';
+  if (artifact.platform.startsWith('win')) {
+    // windows has a different story :)
+    // ex: bin/windows_amd64/kubelogin.exe
+    const normalizedPlatform = artifact.platform.replace('win-', 'windows_');
+    return path.join(dir, 'bin', normalizedPlatform, "kubelogin.exe");
+  } else {
+    // ex: bin/linux_amd64/kubelogin
+    const normalizedPlatform = artifact.platform.replace('-', '_');
+    return path.join(dir, 'bin', normalizedPlatform, "kubelogin");
   }
-  return path.join(dir, 'bin', normalizedPlatform, normalizedBinaryName);
 }
 
 // downloadAndCache downloads the artifact and caches it.
