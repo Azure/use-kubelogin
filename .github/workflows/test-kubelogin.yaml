@@ -12,6 +12,10 @@ on:
         description: 'skip cache?'
         required: false
         default: 'false'
+      with-github-token:
+        description: 'with github token?'
+        required: false
+        default: 'true'
   # for integration testing
   workflow_call:
     inputs:
@@ -25,22 +29,48 @@ on:
         description: 'skip cache?'
         required: false
         default: 'false'
+      with-github-token:
+        type: string
+        description: 'with github token?'
+        required: false
+        default: 'true'
 
 jobs:
-  test:
+  test-with-github-token:
     strategy:
       matrix:
         # TODO(hbc): add ARM64 runners
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
+    if: ${{ inputs.with-github-token == 'true' }}
 
     steps:
     - uses: actions/checkout@v3
       name: Checkout code
     - uses: ./ # use current branch
       name: Setup kubelogin
-      env: {}
-      # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        kubelogin-version: ${{ inputs.kubelogin-version }}
+        skip-cache: ${{ inputs.skip-cache }}
+    - run: |
+        kubelogin --version
+      name: Invoke kubelogin
+
+  test-without-github-token:
+    strategy:
+      matrix:
+        # TODO(hbc): add ARM64 runners
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    if: ${{ inputs.with-github-token != 'true' }}
+
+    steps:
+    - uses: actions/checkout@v3
+      name: Checkout code
+    - uses: ./ # use current branch
+      name: Setup kubelogin
       with:
         kubelogin-version: ${{ inputs.kubelogin-version }}
         skip-cache: ${{ inputs.skip-cache }}

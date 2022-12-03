@@ -4,7 +4,7 @@ on:
   pull_request: {}
 
 jobs:
-  test-versions:
+  test-latest-versions:
     strategy:
       matrix:
         kubelogin-version:
@@ -20,4 +20,37 @@ jobs:
     with:
       kubelogin-version: ${{ matrix.kubelogin-version }}
       skip-cache: ${{ matrix.skip-cache }}
+      with-github-token: 'true'
+    secrets: inherit
+
+  test-specified-versions-no-github-token:
+    strategy:
+      matrix:
+        kubelogin-version:
+        - 'v0.0.24'
+        - 'v0.0.23'
+        skip-cache:
+        - true
+        - false
+    uses: ./.github/workflows/test-kubelogin.yaml
+    with:
+      kubelogin-version: ${{ matrix.kubelogin-version }}
+      skip-cache: ${{ matrix.skip-cache }}
+      with-github-token: 'false'
+    secrets: inherit
+
+  test-specified-versions-with-github-token:
+    strategy:
+      matrix:
+        kubelogin-version:
+        - 'v0.0.24'
+        - 'v0.0.23'
+        skip-cache:
+        - true
+        - false
+    uses: ./.github/workflows/test-kubelogin.yaml
+    with:
+      kubelogin-version: ${{ matrix.kubelogin-version }}
+      skip-cache: ${{ matrix.skip-cache }}
+      with-github-token: 'true'
     secrets: inherit
