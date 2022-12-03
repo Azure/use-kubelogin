@@ -105,6 +105,6 @@ export async function setupArtifact(artifact: KubeloginArtifact) {
     core.debug(`Downloaded and cached kubelogin to ${binaryPath}`);
   }
 
-  core.addPath(binaryPath);
+  core.addPath(path.dirname(binaryPath));
   core.info(`Added ${binaryPath} to PATH`);
 }
