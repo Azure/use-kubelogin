@@ -47,6 +47,6 @@ jobs:
     # FIXME(hbc): github actions doesn't support step level if condition
     - run: |
         env
-        kubelogin.exe --version
+        kubelogin --version
       name: Invoke kubelogin
       shell: bash
