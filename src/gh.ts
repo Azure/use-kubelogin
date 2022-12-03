@@ -18,5 +18,7 @@ export async function resolveLatestVersion(): Promise<string> {
 }
 
 export function releaseArtifactURL(paths: string[]): string {
-  return `https://github.com/${KUBELOGIN_REPO_OWNER}/${KUBELOGIN_REPO}/releases/download/${paths.join('/')}`;
+  return `https://github.com/${KUBELOGIN_REPO_OWNER}/${KUBELOGIN_REPO}/releases/download/${paths.join(
+    '/'
+  )}`;
 }

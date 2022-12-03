@@ -2,14 +2,21 @@ import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 import * as fs from 'fs';
 import path from 'path';
-import { isLatestVersion, releaseArtifactURL, resolveLatestVersion } from "./gh";
+import {
+  isLatestVersion,
+  releaseArtifactURL,
+  resolveLatestVersion,
+} from './gh';
 import { sha256File } from './hash';
 
 const TOOL_NAME = 'kubelogin';
 
-export type Platform = 'darwin-amd64' | 'darwin-arm64' |
-  'linux-amd64' | 'linux-arm64' |
-  'win-amd64';
+export type Platform =
+  | 'darwin-amd64'
+  | 'darwin-arm64'
+  | 'linux-amd64'
+  | 'linux-arm64'
+  | 'win-amd64';
 
 function resolvePlatform(): Platform {
   const platform = process.platform;
@@ -46,7 +53,7 @@ export interface KubeloginArtifact {
 // platform is resolved automatically if not specified.
 export async function getReleaseArtifact(
   version: string,
-  platform?: Platform,
+  platform?: Platform
 ): Promise<KubeloginArtifact> {
   if (isLatestVersion(version)) {
     version = await resolveLatestVersion();
@@ -72,11 +79,11 @@ function resolveBinaryPath(artifact: KubeloginArtifact, dir: string): string {
     // windows has a different story :)
     // ex: bin/windows_amd64/kubelogin.exe
     const normalizedPlatform = artifact.platform.replace('win-', 'windows_');
-    return path.join(dir, 'bin', normalizedPlatform, "kubelogin.exe");
+    return path.join(dir, 'bin', normalizedPlatform, 'kubelogin.exe');
   } else {
     // ex: bin/linux_amd64/kubelogin
-    const normalizedPlatform = artifact.platform.replace("-", "_");
-    return path.join(dir, "bin", normalizedPlatform, "kubelogin");
+    const normalizedPlatform = artifact.platform.replace('-', '_');
+    return path.join(dir, 'bin', normalizedPlatform, 'kubelogin');
   }
 }
 
@@ -93,11 +100,13 @@ async function verifyZipballChecksum(
   // format:
   //  {checksum}  {filename}
   const checksumLines = fs
-    .readFileSync(checksumPath, "utf8")
+    .readFileSync(checksumPath, 'utf8')
     .toString()
-    .split("\n")
+    .split('\n')
     .map((l) => l.split(/\s+/));
-  const expectedChecksum = checksumLines.find((l) => l[1].trim() === artifactName);
+  const expectedChecksum = checksumLines.find(
+    (l) => l[1].trim() === artifactName
+  );
   if (!expectedChecksum) {
     throw new Error(
       `No checksum found for ${artifactName} from ${checksumPath}`
@@ -113,22 +122,28 @@ async function verifyZipballChecksum(
 
 // downloadAndCache downloads the artifact and caches it.
 // Returns the path to the cached artifact.
-async function downloadAndCache(
-  artifact: KubeloginArtifact,
-): Promise<string> {
+async function downloadAndCache(artifact: KubeloginArtifact): Promise<string> {
   const artifactZipball = await tc.downloadTool(artifact.artifactUrl);
   core.debug(`Downloaded ${artifact.artifactUrl} to ${artifactZipball}`);
 
   const artifactChecksum = await tc.downloadTool(artifact.checksumUrl);
   core.debug(`Downloaded ${artifact.checksumUrl} to ${artifactChecksum}`);
 
-  await verifyZipballChecksum(artifactZipball, artifact.artifactName, artifactChecksum);
+  await verifyZipballChecksum(
+    artifactZipball,
+    artifact.artifactName,
+    artifactChecksum
+  );
   core.debug(`Verified checksum of ${artifactZipball}`);
 
   const artifactFolder = await tc.extractZip(artifactZipball);
   core.debug(`Extracted ${artifactZipball} to ${artifactFolder}`);
 
-  const cachedDir = await tc.cacheDir(artifactFolder, TOOL_NAME, artifact.version);
+  const cachedDir = await tc.cacheDir(
+    artifactFolder,
+    TOOL_NAME,
+    artifact.version
+  );
   const rv = resolveBinaryPath(artifact, cachedDir);
   core.debug(`Cached kubelogin to ${rv}`);
 
