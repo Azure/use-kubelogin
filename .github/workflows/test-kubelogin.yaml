@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         # TODO(hbc): add ARM64 runners
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -22,15 +22,29 @@ jobs:
     - uses: ./ # use current branch
       name: Setup kubelogin
       env:
-        ACTIONS_STEP_DEBUG: true
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         kubelogin-version: ${{ github.event.inputs.kubelogin-version }}
     - run: |
         kubelogin --version
       name: Invoke kubelogin
-      if: ${{ matrix.os }} != 'windows-latest'
+
+  test-windows:
+    strategy:
+      matrix:
+        os: [windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout code
+    - uses: ./ # use current branch
+      name: Setup kubelogin
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        kubelogin-version: ${{ github.event.inputs.kubelogin-version }}
+    # FIXME(hbc): github actions doesn't support step level if condition
     - run: |
         kubelogin.exe --version
-      name: Invoke kubelogin.exe
-      if: ${{ matrix.os }} == 'windows-latest'
+      name: Invoke kubelogin
