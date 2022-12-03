@@ -21,7 +21,7 @@ on:
         required: true
         default: '*'
       skip-cache:
-        type: boolean
+        type: string
         description: 'skip cache?'
         required: false
         default: 'false'
