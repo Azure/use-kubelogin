@@ -15,6 +15,6 @@ async function main() {
 
 try {
   main();
-} catch (e: any) {
-  core.setFailed(e.message);
+} catch (e) {
+  core.setFailed((e as { message: string }).message);
 }

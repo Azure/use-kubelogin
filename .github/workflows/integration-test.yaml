@@ -1,9 +1,7 @@
 name: Integration Test
 
 on:
-  pull_request:
-    branches:
-    - main
+  pull_request: {}
 
 jobs:
   test-versions:

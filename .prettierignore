@@ -1,5 +1,6 @@
 *.yaml
 *.yml
 *.md
+*.js
 lib/*
 package-lock.json
