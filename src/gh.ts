@@ -9,6 +9,12 @@ export function isLatestVersion(version: string): boolean {
 }
 
 export async function resolveLatestVersion(): Promise<string> {
+  if (!process.env.GITHUB_TOKEN) {
+    throw new Error(
+      'GITHUB_TOKEN is not set, unable to resolve the latest version of kubelogin'
+    );
+  }
+
   const octokit = new Octokit();
   const { data } = await octokit.repos.getLatestRelease({
     owner: KUBELOGIN_REPO_OWNER,

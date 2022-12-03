@@ -39,8 +39,8 @@ jobs:
       name: Checkout code
     - uses: ./ # use current branch
       name: Setup kubelogin
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      env: {}
+      # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         kubelogin-version: ${{ inputs.kubelogin-version }}
         skip-cache: ${{ inputs.skip-cache }}
