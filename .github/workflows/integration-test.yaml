@@ -1,0 +1,20 @@
+name: Integration Test
+
+on:
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  test-versions:
+    strategy:
+      matrix:
+        kubelogin-version:
+        - latest
+        - '*'
+        - ''
+        - 'v0.0.24'
+    uses: ./.github/workflows/test-kubelogin.yaml
+    with:
+      kubelogin-version: ${{ matrix.kubelogin-version }}
+    secrets: inherit

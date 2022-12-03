@@ -1,13 +1,21 @@
 name: Test workflow
 
 on:
+  # for manual trigger
   workflow_dispatch:
     inputs:
       kubelogin-version:
         description: 'kubelogin version to use'
         required: true
         default: '*'
-  pull_request: {}
+  # for integration testing
+  workflow_call:
+    inputs:
+      kubelogin-version:
+        type: string
+        description: 'kubelogin version to use'
+        required: true
+        default: '*'
 
 jobs:
   test:
@@ -25,7 +33,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        kubelogin-version: ${{ github.event.inputs.kubelogin-version }}
+        kubelogin-version: ${{ inputs.kubelogin-version }}
     - run: |
         kubelogin --version
       name: Invoke kubelogin
