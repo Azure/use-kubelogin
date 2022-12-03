@@ -1,0 +1,7 @@
+*.yaml
+*.yml
+*.md
+*.js
+lib/*
+coverage/*
+package-lock.json
