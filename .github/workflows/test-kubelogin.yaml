@@ -29,3 +29,8 @@ jobs:
     - run: |
         kubelogin --version
       name: Invoke kubelogin
+      if: os != 'windows-latest'
+    - run: |
+        kubelogin.exe --version
+      name: Invoke kubelogin.exe
+      if: os == 'windows-latest'
