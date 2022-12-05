@@ -1,4 +1,4 @@
-# use-kubelogin
+# azure/use-kubelogin
 
 This action helps you to setup [kubelogin][] in your GitHub Actions workflow.
 
