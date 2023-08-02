@@ -20,7 +20,7 @@ on:
         description: 'github api base url override to use'
         required: false
       continue-on-error:
-        description: 'continue for error?''
+        description: 'continue for error?'
         required: false
         default: false
   # for integration testing
