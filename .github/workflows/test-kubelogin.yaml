@@ -19,6 +19,10 @@ on:
       github-api-base-url:
         description: 'github api base url override to use'
         required: false
+      continue-on-error:
+        description: 'continue for error?''
+        required: false
+        default: false
   # for integration testing
   workflow_call:
     inputs:
@@ -41,6 +45,11 @@ on:
         type: string
         description: 'github api base url override to use'
         required: false
+      continue-on-error:
+        type: string
+        description: 'continue for error?''
+        required: false
+        default: false
 
 jobs:
   test-with-github-token:
@@ -48,6 +57,7 @@ jobs:
       matrix:
         # TODO(hbc): add ARM64 runners
         os: [ubuntu-latest, macos-latest, windows-latest]
+    continue-on-error: ${{ inputs.continue-on-error }}
     runs-on: ${{ matrix.os }}
     if: ${{ inputs.with-github-token == 'true' }}
 
@@ -71,6 +81,7 @@ jobs:
       matrix:
         # TODO(hbc): add ARM64 runners
         os: [ubuntu-latest, macos-latest, windows-latest]
+    continue-on-error: ${{ inputs.continue-on-error }}
     runs-on: ${{ matrix.os }}
     if: ${{ inputs.with-github-token != 'true' }}
 

@@ -64,7 +64,6 @@ jobs:
   test-github-api-override:
     # there are expected test failrues to show the github-api-base-url usage,
     # it's fine to ignore the error for such cases.
-    continue-on-error: true
     strategy:
       matrix:
         github-api-base-url:
@@ -77,4 +76,5 @@ jobs:
       github-api-base-url: ${{ matrix.github-api-base-url }}
       with-github-token: 'true'
       skip-cache: true
+      continue-on-error: true
     secrets: inherit
