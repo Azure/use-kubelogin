@@ -8,6 +8,9 @@ inputs:
     description: 'Skip cache check? When set to "true", the action will always download the latest version of kubelogin.'
     required: false
     default: 'false'
+  github-api-base-url:
+    description: 'The base URL of GitHub API. Defaults to https://api.github.com.'
+    required: false
 branding:
   color: green
 runs:

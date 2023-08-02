@@ -16,6 +16,13 @@ on:
         description: 'with github token?'
         required: false
         default: 'true'
+      github-api-base-url:
+        description: 'github api base url override to use'
+        required: false
+      continue-on-error:
+        description: 'continue for error?'
+        required: false
+        default: false
   # for integration testing
   workflow_call:
     inputs:
@@ -34,6 +41,15 @@ on:
         description: 'with github token?'
         required: false
         default: 'true'
+      github-api-base-url:
+        type: string
+        description: 'github api base url override to use'
+        required: false
+      continue-on-error:
+        type: boolean
+        description: 'continue for error?'
+        required: false
+        default: false
 
 jobs:
   test-with-github-token:
@@ -54,9 +70,12 @@ jobs:
       with:
         kubelogin-version: ${{ inputs.kubelogin-version }}
         skip-cache: ${{ inputs.skip-cache }}
+        github-api-base-url: ${{ inputs.github-api-base-url }}
+      continue-on-error: ${{ inputs.continue-on-error }}
     - run: |
         kubelogin --version
       name: Invoke kubelogin
+      continue-on-error: ${{ inputs.continue-on-error }}
 
   test-without-github-token:
     strategy:
@@ -74,6 +93,9 @@ jobs:
       with:
         kubelogin-version: ${{ inputs.kubelogin-version }}
         skip-cache: ${{ inputs.skip-cache }}
+        github-api-base-url: ${{ inputs.github-api-base-url }}
+      continue-on-error: ${{ inputs.continue-on-error }}
     - run: |
         kubelogin --version
       name: Invoke kubelogin
+      continue-on-error: ${{ inputs.continue-on-error }}
