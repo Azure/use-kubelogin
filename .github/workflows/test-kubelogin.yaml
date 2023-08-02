@@ -75,6 +75,7 @@ jobs:
     - run: |
         kubelogin --version
       name: Invoke kubelogin
+      continue-on-error: ${{ inputs.continue-on-error }}
 
   test-without-github-token:
     strategy:
@@ -97,4 +98,4 @@ jobs:
     - run: |
         kubelogin --version
       name: Invoke kubelogin
-      if: ${{ success() }}
+      continue-on-error: ${{ inputs.continue-on-error }}
