@@ -2,6 +2,7 @@ import { isLatestVersion, createOctoKitClient } from './gh';
 
 beforeAll(() => {
   process.env['GITHUB_ACTION'] = 'github-action-test-env';
+  process.env['GITHUB_TOKEN'] = 'github-action-test-token';
 });
 
 test('isLatestVersion', () => {
