@@ -3,6 +3,7 @@ import * as tc from '@actions/tool-cache';
 import * as fs from 'fs';
 import path from 'path';
 import {
+  OctokitClientOptions,
   isLatestVersion,
   releaseArtifactURL,
   resolveLatestVersion,
@@ -49,17 +50,22 @@ export interface KubeloginArtifact {
   readonly checksumUrl: string;
 }
 
+export type GetReleaseArtifactOpts = {
+  platform?: Platform;
+  octokitClientOptions?: OctokitClientOptions;
+};
+
 // getReleaseArtifact retrieves a release artifact with specified version and platform.
 // platform is resolved automatically if not specified.
 export async function getReleaseArtifact(
   version: string,
-  platform?: Platform
+  opts?: GetReleaseArtifactOpts
 ): Promise<KubeloginArtifact> {
   if (isLatestVersion(version)) {
-    version = await resolveLatestVersion();
+    version = await resolveLatestVersion(opts?.octokitClientOptions);
   }
 
-  platform = platform || resolvePlatform();
+  const platform = opts?.platform || resolvePlatform();
 
   const artifactName = `kubelogin-${platform}.zip`;
 
