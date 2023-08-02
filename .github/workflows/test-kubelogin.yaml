@@ -97,4 +97,4 @@ jobs:
     - run: |
         kubelogin --version
       name: Invoke kubelogin
-      continue-on-error: ${{ inputs.continue-on-error }}
+      if: ${{ success() }}
