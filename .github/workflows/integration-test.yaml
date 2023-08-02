@@ -73,4 +73,5 @@ jobs:
       kubelogin-version: 'latest'
       github-api-base-url: ${{ matrix.github-api-base-url }}
       with-github-token: 'true'
+      skip-cache: 'true'
     secrets: inherit
