@@ -46,7 +46,7 @@ on:
         description: 'github api base url override to use'
         required: false
       continue-on-error:
-        type: string
+        type: boolean
         description: 'continue for error?'
         required: false
         default: false
