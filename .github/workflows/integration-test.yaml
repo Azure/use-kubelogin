@@ -70,6 +70,7 @@ jobs:
         - 'https://example.com' # failing example
     uses: ./.github/workflows/test-kubelogin.yaml
     with:
+      kubelogin-version: 'latest'
       github-api-base-url: ${{ matrix.github-api-base-url }}
       with-github-token: 'true'
     secrets: inherit
