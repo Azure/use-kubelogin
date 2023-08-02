@@ -18,7 +18,7 @@ async function main() {
   const opts: GetReleaseArtifactOpts = {};
   if (githubAPIBaseUrl) {
     opts.octokitClientOptions = { baseUrl: githubAPIBaseUrl };
-    core.debug(`github-api-base-url: ${githubAPIBaseUrl}`);
+    core.info(`github-api-base-url: ${githubAPIBaseUrl}`);
   }
 
   const artifact = await getReleaseArtifact(kubeloginVersion, opts);
