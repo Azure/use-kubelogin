@@ -82,6 +82,7 @@ jobs:
         # TODO(hbc): add ARM64 runners
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ inputs.continue-on-error }}
     if: ${{ inputs.with-github-token != 'true' }}
 
     steps:
@@ -93,7 +94,6 @@ jobs:
         kubelogin-version: ${{ inputs.kubelogin-version }}
         skip-cache: ${{ inputs.skip-cache }}
         github-api-base-url: ${{ inputs.github-api-base-url }}
-      continue-on-error: ${{ inputs.continue-on-error }}
     - run: |
         kubelogin --version
       name: Invoke kubelogin
