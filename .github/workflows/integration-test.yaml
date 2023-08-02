@@ -62,19 +62,16 @@ jobs:
     secrets: inherit
 
   test-github-api-override:
-    # there are expected test failrues to show the github-api-base-url usage,
-    # it's fine to ignore the error for such cases.
     strategy:
       matrix:
         github-api-base-url:
         - ''
         - 'https://api.github.com'
-        - 'https://example.com' # failing example
+        # - 'https://example.com' # failing example
     uses: ./.github/workflows/test-kubelogin.yaml
     with:
       kubelogin-version: 'latest'
       github-api-base-url: ${{ matrix.github-api-base-url }}
       with-github-token: 'true'
       skip-cache: true
-      continue-on-error: true
     secrets: inherit
