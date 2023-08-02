@@ -60,3 +60,16 @@ jobs:
       skip-cache: ${{ matrix.skip-cache }}
       with-github-token: 'true'
     secrets: inherit
+
+  test-github-api-override:
+    strategy:
+      matrix:
+        github-api-base-url:
+        - ''
+        - 'https://api.github.com'
+        - 'https://example.com' # failing example
+    uses: ./.github/workflows/test-kubelogin.yaml
+    with:
+      github-api-base-url: ${{ matrix.github-api-base-url }}
+      with-github-token: 'true'
+    secrets: inherit
