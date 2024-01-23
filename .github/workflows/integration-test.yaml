@@ -28,6 +28,8 @@ jobs:
       skip-cache: ${{ matrix.skip-cache }}
       with-github-token: 'true'
     secrets: inherit
+    permissions:
+      contents: read
 
   test-specified-versions-no-github-token:
     strategy:
@@ -44,6 +46,8 @@ jobs:
       skip-cache: ${{ matrix.skip-cache }}
       with-github-token: 'false'
     secrets: inherit
+    permissions:
+      contents: read
 
   test-specified-versions-with-github-token:
     strategy:
@@ -90,3 +94,5 @@ jobs:
       # it's fine to ignore the error for such cases.
       continue-on-error: true
     secrets: inherit
+    permissions:
+      contents: read

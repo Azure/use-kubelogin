@@ -58,8 +58,10 @@ jobs:
         # TODO(hbc): add ARM64 runners
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    if: ${{ inputs.with-github-token == 'true' }}
+    permissions:
+      contents: read
 
+    if: ${{ inputs.with-github-token == 'true' }}
     steps:
     - uses: actions/checkout@v3
       name: Checkout code
@@ -83,8 +85,10 @@ jobs:
         # TODO(hbc): add ARM64 runners
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    if: ${{ inputs.with-github-token != 'true' }}
+    permissions:
+      contents: read
 
+    if: ${{ inputs.with-github-token != 'true' }}
     steps:
     - uses: actions/checkout@v3
       name: Checkout code
