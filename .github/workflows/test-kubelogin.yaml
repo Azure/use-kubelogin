@@ -58,8 +58,10 @@ jobs:
         # TODO(hbc): add ARM64 runners
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    if: ${{ inputs.with-github-token == 'true' }}
+    permissions:
+      contents: read
 
+    if: ${{ inputs.with-github-token == 'true' }}
     steps:
     - uses: actions/checkout@v3
       name: Checkout code
@@ -83,10 +85,12 @@ jobs:
         # TODO(hbc): add ARM64 runners
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    if: ${{ inputs.with-github-token != 'true' }}
+    permissions:
+      contents: read
 
+    if: ${{ inputs.with-github-token != 'true' }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
       name: Checkout code
     - uses: ./ # use current branch
       name: Setup kubelogin
