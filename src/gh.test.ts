@@ -1,5 +1,20 @@
 import { isLatestVersion, createOctoKitClient } from './gh';
 
+jest.mock('@octokit/action', () => ({
+  Octokit: class {
+    public request: { endpoint: { DEFAULTS: { baseUrl: string } } };
+    constructor(options: { baseUrl?: string } = {}) {
+      this.request = {
+        endpoint: {
+          DEFAULTS: {
+            baseUrl: options.baseUrl ?? 'https://api.github.com',
+          },
+        },
+      };
+    }
+  },
+}));
+
 beforeAll(() => {
   process.env['GITHUB_ACTION'] = 'github-action-test-env';
   process.env['GITHUB_TOKEN'] = 'github-action-test-token';
